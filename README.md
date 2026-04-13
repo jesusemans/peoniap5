@@ -28,4 +28,28 @@ Abrir `index.html` en el browser. No necesita servidor.
 
 ---
 
-*English: Generative 3D peony — bud → bloom → wilt loop, three render modes (ASCII/dots/pixels), glitch fx, mouse tracking. Single HTML file, p5.js only.*
+## English
+
+A generative 3D peony made with p5.js. Single HTML file, no dependencies.
+
+**[Live demo](https://jesusemans.github.io/peoniap5/)**
+
+The flower is built piece by piece in a 3D buffer (petals, sepals, stem, leaves, stamens) and projected onto the canvas with perspective and z-sorting. It rotates on its own and follows the mouse.
+
+It has a lifecycle: starts as a bud, blooms, stays in an interactive phase for a bit, wilts, and starts over with a different color variant. There are three variants (classic pink, pale rose, fuchsia) each with different petal counts.
+
+The render alternates between ASCII, dots and pixels with dithered transitions. Every now and then a glitch kicks in with displacement and chromatic aberration.
+
+## Controls
+
+- **F** — fullscreen
+- **G** — trigger glitch
+- **Click** — trigger glitch
+
+## Stack
+
+p5.js 1.9.0 (CDN) + native Canvas 2D API for ASCII text. That's it.
+
+## Usage
+
+Open `index.html` in the browser. No server needed.
