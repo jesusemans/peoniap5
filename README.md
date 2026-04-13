@@ -1,4 +1,4 @@
-# 🌸 Peonía 3D — Generative ASCII Floral Art
+# Peonía 3D — Generative ASCII Floral Art
 
 **[Ver en vivo / Live Demo](https://jesusemans.github.io/peoniap5/)**
 
