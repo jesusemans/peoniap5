@@ -1,18 +1,52 @@
+/**
+ * @module types
+ * @description Type definitions, interfaces, and enums used across the project.
+ */
+
+import p5 from 'p5';
+
+/** Flower types */
 export type FlowerType = 'peony' | 'rose' | 'dahlia';
 
-export interface FlowerElement {
-  type: FlowerType;
-  c1: [number, number, number];
-  c2: [number, number, number];
-  c3: [number, number, number];
-  stemC: [number, number, number];
-  layers: number;
-  petalsPerLayer: number;
-  maxRadius: number;
-  ruffleAmt: number;
-  sepals?: number;
+
+/**
+ * Enum indicating the rendering modes.
+ */
+export enum RenderMode {
+  ASCII = 0,
+  DOTS = 1,
+  PIXEL = 2,
+  ALL = 3, // Auto-cycle mode
 }
 
+/**
+ * Custom methods added externally to the p5.js Sketch instance.
+ */
+export interface ExtendedP5 extends p5 {
+  updateCustomImage: (url: string | null) => void;
+  setEffectMode: (mode: RenderMode) => void;
+  startExperience: () => void;
+}
+
+/**
+ * Data structure defining flower types and their appearance.
+ */
+export interface FlowerElement {
+  type: FlowerType;
+  c1: [number, number, number];      // Primary color
+  c2: [number, number, number];      // Accent color
+  c3: [number, number, number];      // Center color
+  stemC: [number, number, number];   // Stem color
+  layers: number;                    // Number of petal layers
+  petalsPerLayer: number;            // Number of petals per layer
+  maxRadius: number;                 // Maximum flower width
+  ruffleAmt: number;                 // Petal ruffle intensity
+  sepals?: number;                   // Number of sepals
+}
+
+/**
+ * Definition of a glitch slice during the glitch effect.
+ */
 export interface GlitchSlice {
   y: number;
   h: number;
@@ -23,25 +57,26 @@ export interface GlitchSlice {
   duration: number;
 }
 
-export type RenderMode = 0 | 1 | 2 | 3; // 0: ASCII, 1: DOTS, 2: PIXEL, 3: ALL
-
+/**
+ * Drawing items waiting in the render queue.
+ * Used for Depth Sorting (Z-buffer).
+ */
 export interface RenderItem {
-  rz: number;
-  tp: 'p' | 's' | 'c'; // petal, sepal, center
-  sx: number;
-  sy: number;
-  sa: number;
-  pl?: number;
-  pw?: number;
-  rPhase?: number;
-  rAmt?: number;
-  r?: number;
-  gr?: number;
-  b?: number;
-  cup?: number;
-  sLen?: number;
-  sW?: number;
-  sAlpha?: number;
-  sc?: [number, number, number];
-  alpha?: number;
+  rz: number;                         // Z-depth
+  tp: 'p' | 's' | 'c';                // Type (Petal, Sepal, Center)
+  sx: number;                         // Coordinate X
+  sy: number;                         // Coordinate Y
+  sa: number;                         // Angle
+  pl?: number;                        // Length (for Petal)
+  pw?: number;                        // Width (for Petal)
+  rPhase?: number;                    // Ruffle phase
+  rAmt?: number;                      // Ruffle intensity
+  r?: number;                         // Color R
+  gr?: number;                        // Color G
+  b?: number;                         // Color B
+  sLen?: number;                      // Sepal length
+  sW?: number;                        // Sepal width
+  sAlpha?: number;                    // Sepal transparency
+  sc?: [number, number, number];      // Stem color
+  alpha?: number;                     // General transparency
 }
