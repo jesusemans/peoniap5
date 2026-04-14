@@ -23,7 +23,7 @@ export interface GlitchSlice {
   duration: number;
 }
 
-export type RenderMode = 0 | 1 | 2; // 0: ASCII, 1: DOTS, 2: PIXEL
+export type RenderMode = 0 | 1 | 2 | 3; // 0: ASCII, 1: DOTS, 2: PIXEL, 3: ALL
 
 export interface RenderItem {
   rz: number;

@@ -61,7 +61,7 @@ function App() {
     <>
       <div className="mode-group">
         <div className="label-small">Renderer</div>
-        {(['ascii', 'dots', 'pixel'] as const).map((mode, index) => (
+        {(['ascii', 'dots', 'pixel', 'all'] as const).map((mode, index) => (
           <button
             key={mode}
             className={`text-btn ${effectMode === index ? 'active' : ''}`}

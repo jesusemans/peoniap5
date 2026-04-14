@@ -157,9 +157,13 @@ const SketchCanvas: React.FC<SketchCanvasProps> = ({ imageSrc, effectMode, onRea
       };
 
       (p as any).setEffectMode = (mode: RenderMode) => {
-        isManualMode = true;
-        renderMode = mode;
-        modeT = 1;
+        if (mode === 3) {
+          isManualMode = false;
+        } else {
+          isManualMode = true;
+          renderMode = mode;
+          modeT = 1;
+        }
       };
 
       (p as any).startExperience = () => {
