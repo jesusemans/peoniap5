@@ -1,0 +1,234 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #000;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+.app-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+canvas {
+  display: block;
+}
+
+#loader {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.8s ease;
+}
+
+#loader.fade {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#loader .title {
+  color: #fff;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  letter-spacing: 4px;
+  opacity: 0.7;
+  margin-bottom: 24px;
+}
+
+#loader .bar-bg {
+  width: 180px;
+  height: 3px;
+  background: #222;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+#loader .bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #c77, #e9b);
+  transition: width 0.15s;
+}
+
+#loader .pct {
+  color: #555;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  margin-top: 10px;
+}
+
+.enter-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  padding-top: 140px; /* Shift button down */
+}
+
+.enter-overlay.visible {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+.start-btn {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  padding: 12px 40px;
+  cursor: pointer;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.start-btn:hover {
+  background: #fff;
+  color: #000;
+  border-color: #fff;
+}
+
+/* Phase 3: Minimalist UI Styles */
+.ui-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: 'Courier New', monospace;
+  transition: opacity 0.8s ease;
+}
+
+.ui-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.controls-panel-desktop {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: flex-start;
+  pointer-events: auto;
+}
+
+@media (max-width: 768px) {
+  .controls-panel-desktop {
+    display: none;
+  }
+}
+
+.hamburger-btn {
+  pointer-events: auto;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-family: 'Courier New', monospace;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 1100;
+  display: none;
+  padding: 0;
+}
+
+@media (max-width: 768px) {
+  .hamburger-btn {
+    display: block;
+  }
+}
+
+.mobile-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(10px);
+  z-index: 1050;
+  padding: 80px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  transform: translateX(-100%);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: auto;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mobile-drawer.open {
+  transform: translateX(0);
+}
+
+.text-btn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 11px;
+  cursor: pointer;
+  padding: 5px 0;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.text-btn:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.text-btn.active {
+  color: #fff;
+}
+
+.mode-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.label-small {
+  font-size: 9px;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  opacity: 0.5;
+  letter-spacing: 3px;
+}
+
+.hidden-input {
+  display: none;
+}
