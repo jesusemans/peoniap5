@@ -1,6 +1,7 @@
-import { useState, useRef, useEffect, ChangeEvent } from 'react';
-import SketchCanvas from './components/SketchCanvas';
+import { useState, useRef, useEffect, ChangeEvent, lazy, Suspense } from 'react';
+const SketchCanvas = lazy(() => import('./components/SketchCanvas'));
 import { RenderMode } from './types';
+import Controls from './components/Controls';
 
 function App() {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
@@ -9,6 +10,7 @@ function App() {
   const [hasStarted, setHasStarted] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [audioError, setAudioError] = useState<string | null>(null);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -46,6 +48,16 @@ function App() {
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // P2: File validation (Type & Size)
+      if (!file.type.startsWith('image/')) {
+        alert("Please upload an image file.");
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        alert("File is too large. Please upload an image smaller than 5MB.");
+        return;
+      }
+
       if (imageSrc) URL.revokeObjectURL(imageSrc);
       const url = URL.createObjectURL(file);
       setImageSrc(url);
@@ -57,43 +69,34 @@ function App() {
     fileInputRef.current?.click();
   };
 
-  const UIContent = (
-    <>
-      <div className="mode-group">
-        <div className="label-small">Renderer</div>
-        {(['ascii', 'dots', 'pixel', 'all'] as const).map((mode, index) => (
-          <button
-            key={mode}
-            className={`text-btn ${effectMode === index ? 'active' : ''}`}
-            onClick={() => { setEffectMode(index as RenderMode); setIsMenuOpen(false); }}
-          >
-            {mode}
-          </button>
-        ))}
-      </div>
-
-      <div className="mode-group">
-        <div className="label-small">Actions</div>
-        <button className="text-btn" onClick={handleUploadClick}>
-          Upload Photo
-        </button>
-        <button className="text-btn" onClick={toggleMute}>
-          {isMuted ? 'Unmute' : 'Mute'}
-        </button>
-      </div>
-    </>
-  );
+  const handleAudioError = () => {
+    setAudioError("Audio failed to load. Please check your connection.");
+    setIsMuted(true);
+  };
 
   return (
     <div className="app-container">
-      <SketchCanvas 
-        imageSrc={imageSrc} 
-        effectMode={effectMode}
-        onReady={(ready) => setIsReady(ready)}
-        hasStarted={hasStarted}
+      <Suspense fallback={<div className="canvas-placeholder"></div>}>
+        <SketchCanvas 
+          imageSrc={imageSrc} 
+          effectMode={effectMode}
+          onReady={(ready) => setIsReady(ready)}
+          hasStarted={hasStarted}
+        />
+      </Suspense>
+
+      <audio 
+        ref={audioRef} 
+        src={`${import.meta.env.BASE_URL}music.mp3`} 
+        loop 
+        onError={handleAudioError}
       />
 
-      <audio ref={audioRef} src={`${import.meta.env.BASE_URL}music.mp3`} loop />
+      {audioError && (
+        <div className="audio-error-toast" onClick={() => setAudioError(null)}>
+          {audioError} [×]
+        </div>
+      )}
 
       {/* Start UI Overlay (Shown after loading, before art) */}
       <div className={`enter-overlay ${isReady && !hasStarted ? 'visible' : ''}`}>
@@ -106,15 +109,32 @@ function App() {
       <div className={`ui-overlay ${!hasStarted ? 'hidden' : ''}`}>
         
         <div className="controls-panel-desktop">
-          {UIContent}
+          <Controls 
+            effectMode={effectMode}
+            setEffectMode={setEffectMode}
+            isMuted={isMuted}
+            toggleMute={toggleMute}
+            onUploadClick={handleUploadClick}
+          />
         </div>
 
-        <button className="hamburger-btn" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+        <button 
+          className="hamburger-btn" 
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-label={isMenuOpen ? "Close Menu" : "Open Menu"}
+        >
           {isMenuOpen ? '×' : '☰'}
         </button>
 
         <div className={`mobile-drawer ${isMenuOpen ? 'open' : ''}`}>
-          {UIContent}
+          <Controls 
+            effectMode={effectMode}
+            setEffectMode={setEffectMode}
+            isMuted={isMuted}
+            toggleMute={toggleMute}
+            onUploadClick={handleUploadClick}
+            onCloseMenu={() => setIsMenuOpen(false)}
+          />
         </div>
 
         <input
